@@ -5,7 +5,7 @@ import { AiFillBug } from "react-icons/ai";
 const NavBar = () => {
   const links = [
     { label: "Dashboard", href: "/" },
-    { label: "Issues", href: "/" },
+    { label: "Issues", href: "/issues" },
   ];
 
   return (
