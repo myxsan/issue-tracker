@@ -11,11 +11,13 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createIssueSchema } from "@/app/validationSchemas";
 import ErrorMessage from "@/app/components/ErrorMessage";
+import Spinner from "@/app/components/Spinner";
 
 type IssueForm = z.infer<typeof createIssueSchema>;
 
 const NewIssuePage = () => {
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const {
     register,
@@ -35,12 +37,14 @@ const NewIssuePage = () => {
       )}
       <form
         onSubmit={handleSubmit(async (data) => {
+          setIsSubmitting(true);
           try {
             await axios.post("/api/issues", data);
             router.push("/issues");
           } catch (error) {
             setError("An unexpected error occurred.");
           }
+          setIsSubmitting(false);
         })}
         className="space-y-3"
       >
@@ -56,7 +60,9 @@ const NewIssuePage = () => {
           )}
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
-        <Button type="submit">Submit New Issue</Button>
+        <Button disabled={isSubmitting} type="submit">
+          Submit New Issue {isSubmitting && <Spinner />}
+        </Button>
       </form>
     </div>
   );
